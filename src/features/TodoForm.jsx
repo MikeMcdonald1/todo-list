@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import TextInputWithLabel from '../shared/TextInputWithLabel';
 
 function TodoForm({ onAddTodo }) {
   const todoTitleInput = useRef('');
@@ -14,14 +14,12 @@ function TodoForm({ onAddTodo }) {
 
   return (
     <form onSubmit={handleAddTodo}>
-      <label htmlFor="todoTitle">Todo</label>
-      <input
-        type="text"
-        id="todoTitle"
-        name="title"
-        ref={todoTitleInput}
+      <TextInputWithLabel
         value={workingTodo}
+        ref={todoTitleInput}
         onChange={(e) => setWorkingToDo(e.target.value)}
+        elementId="todoTitle"
+        labelText="Todo"
       />
       <button type="submit" disabled={workingTodo === ''}>
         Add Todo
