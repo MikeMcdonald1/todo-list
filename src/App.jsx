@@ -12,7 +12,7 @@ function App() {
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  // 1. ADDTODO FUNCTION
+  // 1. addTodo FUNCTION
   const addTodo = async (newTodo) => {
     const payload = {
       records: [
@@ -61,41 +61,34 @@ function App() {
     }
   };
 
-  // 2. FETCHING TODOS FUNCTION (FETCHING FROM AIRTABLE)
+  // 2. fetchTodos FUNCTION (Fetching from Airtable)
   useEffect(() => {
     const fetchTodos = async () => {
-      setIsLoading(true); //Use setIsLoading to update isLoading to true
+      setIsLoading(true);
+
       const options = {
-        //Create an options object for the fetch request. Include:
-        method: 'GET', //A method property set to "GET",
+        method: 'GET',
         headers: {
-          //And a headers property set to an object containing
-          Authorization: token, //the following key/value pair: "Authorization": token.
+          Authorization: token,
         },
       };
 
-      //Set up try/catch/finally blocks to handle the fetch:
       try {
-        const resp = await fetch(url, options); //Save an awaited fetch to the const resp and pass in the url and options : const resp = await fetch(url, options);
+        const resp = await fetch(url, options);
 
         if (!resp.ok) {
-          //If resp.ok evaluates to false in an if statement, throw a new Error that takes in resp.message.
           throw new Error(resp.message);
         }
 
-        const response = await resp.json(); //Await the value that response.json() returns.
-
+        const response = await resp.json();
         const todos = response.records.map((record) => {
-          //in a map method called on records, define an anonymous function: It takes a record param.
           const todo = {
-            //It contains a const todo = {}
-            id: record.id, //inside the object, assign the record properties to the appropriate todo properties
-            title: record.fields.Title, //MISSING PART FROM ASSIGNMENT to display Title(case sensitive) on todo list app
+            id: record.id,
+            title: record.fields.title,
             ...record.fields,
           };
 
           if (!todo.isCompleted) {
-            //if isCompleted is not truthy, you will want to explicitly set the property equal to false
             todo.isCompleted = false;
           }
           return todo;
@@ -103,47 +96,57 @@ function App() {
         console.log(todos);
         setTodoList([...todos]);
       } catch (error) {
-        //the catch block takes in an error parameter
-        setErrorMessage(error.message); //use setErrorMessage with error.message to set an error message that will display to the user shortly
+        setErrorMessage(error.message);
       } finally {
-        setIsLoading(false); //setIsLoading value back to false
+        setIsLoading(false);
       }
     };
 
     fetchTodos();
-  }, []); //empty dependency array
+  }, []);
 
-  // 3. HANDLEADDTODO FUNCTION
+  // Removed original handleAddTodo function
+  // 3. handleAddTodo FUNCTION
+  //
+  // function handleAddTodo(title) {
+  //   const newTodo = { title: title, id: Date.now(), isCompleted: false };
+  //   setTodoList([...todoList, newTodo]);
+  // }
+
   function handleAddTodo(title) {
-    const newTodo = { title: title, id: Date.now(), isCompleted: false };
-    setTodoList([...todoList, newTodo]);
+    const newTodo = { title: title, isCompleted: false };
+    addTodo(newTodo);
   }
 
-  // 4. COMPLETETODO FUNCTION
+  // const completeTodo = async (id) => {
+  //   const updatedTodos = todoList.map((todo) => {
+  //     if (todo.id === id) {
+  //       return { ...todo, isCompleted: true };
+  //     } else {
+  //       return todo;
+  //     }
+  //   });
+
+  // 4. completeTodo FUNCTION
   async function completeTodo(id) {
-    //1. optimistically update the UI: marks the todo as completed immediately
     const updatedTodos = todoList.map((todo) => {
       if (todo.id === id) {
-        //If this is the todo being completed, mark it as complete
-        return { ...todo, isCompleted: true }; //mark as complete
+        return { ...todo, isCompleted: true };
       } else {
-        //otherwise......
-        return todo; //leave todo unchanged
+        return todo;
       }
     });
-    setTodoList(updatedTodos); //update the UI with the new todo list
-
+    setTodoList(updatedTodos);
     const options = {
-      method: 'PATCH', //used bc we are updating something
+      method: 'PATCH',
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        //Turn data into JSON format
         records: [
           {
-            id: id, //Tell airtable which todo to update
+            id: id,
             fields: {
               isCompleted: true,
             },
@@ -153,56 +156,54 @@ function App() {
     };
 
     try {
-      //Try to send the update to Airtable
       const resp = await fetch(url, options);
 
       if (!resp.ok) {
-        //If the server says something went wrong, throw error
         throw new Error('Failed to complete todo');
       }
 
-      //if everything goes fine, get the updataed data from the server
       const { records } = await resp.json();
       const updatedTodo = {
-        id: records[0].id, //Get the id back from Airtable
-        ...records[0].fields, //Get all the fields like title and isCompleted
+        id: records[0].id,
+        ...records[0].fields,
       };
 
-      //if isCompleted is somehow not true, fix it to be false
       if (!updatedTodo.isCompleted) {
         updatedTodo.isCompleted = false;
       }
 
-      //update screen with data received back from Airtable
       const finalTodos = todoList.map((todo) => {
         if (todo.id === updatedTodo.id) {
-          return { ...updatedTodo }; //replace the old todo with the updated one
+          return { ...updatedTodo };
         } else {
-          return todo; //keep the other todos the same
+          return todo;
         }
       });
 
-      setTodoList(finalTodos); //save the new list
+      setTodoList(finalTodos);
     } catch (error) {
-      console.log(error); //if there was a problem, catch it here
-      setErrorMessage(error.message); //show the error message to the user
+      console.log(error);
+      setErrorMessage(error.message);
 
-      //undo the change on the screen (put the todo back how it was)
       const revertedTodos = todoList.map((todo) => {
         if (todo.id === id) {
-          return { ...todo, isCompleted: false }; //set isCompleted back to false from true
+          return { ...todo, isCompleted: false };
         } else {
-          return todo; //leave the other todos the same
+          return todo;
         }
       });
-      setTodoList(revertedTodos); //save the reverted list
+      setTodoList(revertedTodos);
     }
   }
 
-  // 5. UPDATETODO FUNCTION
+  // 5. updateTodo FUNCTION
 
   async function updateTodo(editedTodo) {
     const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+
+    // const updateTodo = async (editedTodo) => {
+    //   const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+    // };
 
     const payload = {
       records: [
@@ -225,6 +226,10 @@ function App() {
       body: JSON.stringify(payload),
     };
 
+    console.log(JSON.stringify(payload));
+    console.log(originalTodo);
+    console.log(editedTodo);
+
     try {
       const resp = await fetch(url, options);
 
@@ -233,27 +238,36 @@ function App() {
       }
 
       const { records } = await resp.json();
+
       const updatedTodo = {
-        id: records[0].id,
+        id: records[0]['id'],
         ...records[0].fields,
       };
 
-      if (!updatedTodo.isCompleted) {
+      if (!records[0].fields.isCompleted) {
+        //updated from (!updatedTodo.isCompleted)
         updatedTodo.isCompleted = false;
       }
 
+      //Changed from 'updateTodo.id' to 'updatedTodos' per assignment. why?? Changed from one function to another function, but why not use object?
+      //final change: 'updatedTodos' to 'updatedTodo'.
+      //
+      //updateTodo function
+      //updatedTodo object
+      //updatedTodos function
+
       const updatedTodos = todoList.map((todo) => {
-        if (todo.id === updateTodo.id) {
+        if (todo.id === updatedTodo.id) {
           return { ...updatedTodo };
         } else {
           return todo;
         }
       });
-
+      console.log(updatedTodos);
       setTodoList([...updatedTodos]);
     } catch (error) {
       console.log(error);
-      setErrorMessage(`${errorMessage}. Reverting todo...`);
+      setErrorMessage(`${error.message}. Reverting todo...`); //changed ${errorMessage} to ${error.message} per assignment.
       const revertedTodos = todoList.map((todo) =>
         todo.id === originalTodo.id ? { ...originalTodo } : todo
       );
