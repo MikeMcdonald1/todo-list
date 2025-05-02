@@ -105,27 +105,12 @@ function App() {
     fetchTodos();
   }, []);
 
-  // Removed original handleAddTodo function
   // 3. handleAddTodo FUNCTION
-  //
-  // function handleAddTodo(title) {
-  //   const newTodo = { title: title, id: Date.now(), isCompleted: false };
-  //   setTodoList([...todoList, newTodo]);
-  // }
 
   function handleAddTodo(title) {
     const newTodo = { title: title, isCompleted: false };
     addTodo(newTodo);
   }
-
-  // const completeTodo = async (id) => {
-  //   const updatedTodos = todoList.map((todo) => {
-  //     if (todo.id === id) {
-  //       return { ...todo, isCompleted: true };
-  //     } else {
-  //       return todo;
-  //     }
-  //   });
 
   // 4. completeTodo FUNCTION
   async function completeTodo(id) {
@@ -201,10 +186,6 @@ function App() {
   async function updateTodo(editedTodo) {
     const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
 
-    // const updateTodo = async (editedTodo) => {
-    //   const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
-    // };
-
     const payload = {
       records: [
         {
@@ -226,10 +207,6 @@ function App() {
       body: JSON.stringify(payload),
     };
 
-    console.log(JSON.stringify(payload));
-    console.log(originalTodo);
-    console.log(editedTodo);
-
     try {
       const resp = await fetch(url, options);
 
@@ -245,16 +222,8 @@ function App() {
       };
 
       if (!records[0].fields.isCompleted) {
-        //updated from (!updatedTodo.isCompleted)
         updatedTodo.isCompleted = false;
       }
-
-      //Changed from 'updateTodo.id' to 'updatedTodos' per assignment. why?? Changed from one function to another function, but why not use object?
-      //final change: 'updatedTodos' to 'updatedTodo'.
-      //
-      //updateTodo function
-      //updatedTodo object
-      //updatedTodos function
 
       const updatedTodos = todoList.map((todo) => {
         if (todo.id === updatedTodo.id) {
@@ -267,7 +236,7 @@ function App() {
       setTodoList([...updatedTodos]);
     } catch (error) {
       console.log(error);
-      setErrorMessage(`${error.message}. Reverting todo...`); //changed ${errorMessage} to ${error.message} per assignment.
+      setErrorMessage(`${error.message}. Reverting todo...`);
       const revertedTodos = todoList.map((todo) =>
         todo.id === originalTodo.id ? { ...originalTodo } : todo
       );
@@ -277,6 +246,7 @@ function App() {
     }
   }
 
+  // return statement for our main App.jsx component
   return (
     <div>
       <h1>To Do List</h1>
