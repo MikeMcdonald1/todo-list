@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import App from '../App';
 
 function TodosViewForm({
   sortDirection,
@@ -8,6 +9,27 @@ function TodosViewForm({
   queryString,
   setQueryString,
 }) {
+  // added local state for serach input (localQueryString) to manage typing delay
+  // refactored search input and clear button to use localQueryString
+  // used setTimeout inside useEffect to delay the update of queryString by 500ms
+  // cleaned up previous timeouts on each re-render using a clean up function, clearTimeout(debounce)
+
+  //define local state for the search input and set its defaultValue to queryString
+  const [localQueryString, setLocalQueryString] = useState(queryString);
+
+  //create useEffect()
+  useEffect(() => {
+    // call setTimeout and assign it a constant, debounce
+    const debounce = setTimeout(() => {
+      setQueryString(localQueryString); // call setQueryString(localQueryString)
+    }, 500); // give it a delay of 500ms
+
+    return; //add anonymous function that calls clearTimeout that takes in debounce
+    () => {
+      clearTimeout(debounce);
+    };
+  }, [localQueryString, setQueryString]); //added these to dependency array
+
   function preventRefresh(event) {
     event.preventDefault();
   }
@@ -17,15 +39,15 @@ function TodosViewForm({
         <label>Search Todos:</label>
         <input
           type="text"
-          value={queryString}
+          value={localQueryString} //refactored from 'queryString'
           onChange={(e) => {
-            setQueryString(e.target.value);
+            setLocalQueryString(e.target.value); //refactored from 'setQueryString
           }}
         ></input>
         <button
           type="button"
           onClick={(e) => {
-            setQueryString('');
+            setLocalQueryString(''); //refactored from 'setQueryString'
           }}
         >
           Clear
@@ -60,10 +82,3 @@ function TodosViewForm({
 }
 
 export default TodosViewForm;
-
-{
-  /* <div>
-<search>Search Todos:</search>
-<button>Clear</button>
-</div> */
-}
