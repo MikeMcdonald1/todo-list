@@ -16,10 +16,6 @@ function App() {
   const [sortDirection, setSortDirection] = useState('desc');
   const [queryString, setQueryString] = useState('');
 
-  // deleted utility function and refactored encodeUrl into useCallback
-  // defined encodeUrl using useCallback with sortField, sortDirectoin, and queryString as dependencies
-  // updated all encodeUrl calls to use no arguments
-
   const encodeUrl = useCallback(() => {
     let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
     let searchQuery = '';

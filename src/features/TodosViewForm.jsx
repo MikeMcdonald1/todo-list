@@ -9,26 +9,17 @@ function TodosViewForm({
   queryString,
   setQueryString,
 }) {
-  // added local state for serach input (localQueryString) to manage typing delay
-  // refactored search input and clear button to use localQueryString
-  // used setTimeout inside useEffect to delay the update of queryString by 500ms
-  // cleaned up previous timeouts on each re-render using a clean up function, clearTimeout(debounce)
-
-  //define local state for the search input and set its defaultValue to queryString
   const [localQueryString, setLocalQueryString] = useState(queryString);
 
-  //create useEffect()
   useEffect(() => {
-    // call setTimeout and assign it a constant, debounce
     const debounce = setTimeout(() => {
-      setQueryString(localQueryString); // call setQueryString(localQueryString)
-    }, 500); // give it a delay of 500ms
+      setQueryString(localQueryString);
+    }, 500);
 
-    return; //add anonymous function that calls clearTimeout that takes in debounce
-    () => {
+    return () => {
       clearTimeout(debounce);
     };
-  }, [localQueryString, setQueryString]); //added these to dependency array
+  }, [localQueryString, setQueryString]);
 
   function preventRefresh(event) {
     event.preventDefault();
@@ -39,15 +30,15 @@ function TodosViewForm({
         <label>Search Todos:</label>
         <input
           type="text"
-          value={localQueryString} //refactored from 'queryString'
+          value={localQueryString}
           onChange={(e) => {
-            setLocalQueryString(e.target.value); //refactored from 'setQueryString
+            setLocalQueryString(e.target.value);
           }}
         ></input>
         <button
           type="button"
           onClick={(e) => {
-            setLocalQueryString(''); //refactored from 'setQueryString'
+            setLocalQueryString('');
           }}
         >
           Clear
