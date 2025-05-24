@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import App from '../App';
+import styled from 'styled-components';
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+const FiltersWrapper = styled.div`
+  display: flex;
+  gap: 0.15rem;
+  flex-wrap: wrap;
+`;
 
 function TodosViewForm({
   sortDirection,
@@ -25,8 +39,8 @@ function TodosViewForm({
     event.preventDefault();
   }
   return (
-    <form onSubmit={preventRefresh}>
-      <div>
+    <StyledForm onSubmit={preventRefresh}>
+      <FiltersWrapper>
         <label>Search Todos:</label>
         <input
           type="text"
@@ -43,9 +57,9 @@ function TodosViewForm({
         >
           Clear
         </button>
-      </div>
+      </FiltersWrapper>
 
-      <div>
+      <FiltersWrapper>
         <label>Sort by</label>
         <select
           value={sortField}
@@ -67,8 +81,8 @@ function TodosViewForm({
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-      </div>
-    </form>
+      </FiltersWrapper>
+    </StyledForm>
   );
 }
 

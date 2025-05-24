@@ -1,8 +1,8 @@
-import './App.css';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
 import { useState, useEffect, useCallback } from 'react';
+import styles from './App.module.css';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -261,8 +261,8 @@ function App() {
 
   // return statement for our main App.jsx component
   return (
-    <div>
-      <h1>To Do List</h1>
+    <div className={styles.container}>
+      <h1 className={styles.header}>To Do List</h1>
       <TodoForm onAddTodo={handleAddTodo} />
       <TodoList
         todoList={todoList}
@@ -282,7 +282,7 @@ function App() {
       {errorMessage && (
         <div>
           <hr />
-          <p>{errorMessage}</p>
+          <p className={styles.error}>{errorMessage}</p>
           <button onClick={() => setErrorMessage('')}>Dismiss</button>
         </div>
       )}
