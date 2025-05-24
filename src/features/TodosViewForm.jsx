@@ -9,7 +9,7 @@ const StyledForm = styled.form`
   gap: 0.75rem;
 `;
 
-const StyledDiv = styled.div`
+const FiltersWrapper = styled.div`
   display: flex;
   gap: 0.15rem;
   flex-wrap: wrap;
@@ -40,7 +40,7 @@ function TodosViewForm({
   }
   return (
     <StyledForm onSubmit={preventRefresh}>
-      <StyledDiv>
+      <FiltersWrapper>
         <label>Search Todos:</label>
         <input
           type="text"
@@ -57,9 +57,9 @@ function TodosViewForm({
         >
           Clear
         </button>
-      </StyledDiv>
+      </FiltersWrapper>
 
-      <StyledDiv>
+      <FiltersWrapper>
         <label>Sort by</label>
         <select
           value={sortField}
@@ -81,7 +81,7 @@ function TodosViewForm({
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-      </StyledDiv>
+      </FiltersWrapper>
     </StyledForm>
   );
 }
