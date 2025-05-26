@@ -146,25 +146,6 @@ function App() {
       }
 
       const { records } = await resp.json();
-      // CODE CUT/PASTED FOR actions.updatedTodo
-      // const updatedTodo = {
-      //   id: records[0].id,
-      //   ...records[0].fields,
-      // };
-
-      // if (!updatedTodo.isCompleted) {
-      //   updatedTodo.isCompleted = false;
-      // }
-
-      // const finalTodos = todoList.map((todo) => {
-      //   if (todo.id === updatedTodo.id) {
-      //     return { ...updatedTodo };
-      //   } else {
-      //     return todo;
-      //   }
-      // });
-
-      // setTodoList(finalTodos);
     } catch (error) {
       console.log(error);
       setErrorMessage(error.message);
@@ -207,6 +188,7 @@ function App() {
     };
 
     try {
+      dispatch({ type: todoActions.updateTodo, editedTodo });
       const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok) {
@@ -214,32 +196,8 @@ function App() {
       }
 
       const { records } = await resp.json();
-      // code cut/paste here for actions.updateTodo
-      // const updatedTodo = {
-      //   id: records[0]['id'],
-      //   ...records[0].fields,
-      // };
-
-      // if (!records[0].fields.isCompleted) {
-      //   updatedTodo.isCompleted = false;
-      // }
-
-      // const updatedTodos = todoList.map((todo) => {
-      //   if (todo.id === updatedTodo.id) {
-      //     return { ...updatedTodo };
-      //   } else {
-      //     return todo;
-      //   }
-      // });
-
-      // setTodoList([...updatedTodos]);
     } catch (error) {
-      console.log(error);
-      setErrorMessage(`${error.message}. Reverting todo...`);
-      // const revertedTodos = todoList.map((todo) =>
-      //   todo.id === originalTodo.id ? { ...originalTodo } : todo
-      // );
-      setTodoList([...revertedTodos]);
+      dispatch({ type: todoActions.revertTodo, originalTodo });
     } finally {
       setIsSaving(false);
     }
