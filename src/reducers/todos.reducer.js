@@ -21,30 +21,63 @@ const actions = {
 
 function reducer(state = initialState, action) {
   switch (action.type) {
+    //useEffect (Pessimistic UI) section
     case actions.fetchTodos:
       return {
         ...state,
+        isLoading: true,
       };
     case actions.loadTodos:
+      const todos = action.records.map((record) => {
+        const todo = {
+          id: record.id,
+          title: record.fields.title,
+          ...record.fields,
+        };
+
+        if (!todo.isCompleted) {
+          todo.isCompleted = false;
+        }
+        return todo;
+      });
       return {
         ...state,
+        todoList: todos,
+        isLoading: false,
       };
     case actions.setLoadError:
       return {
         ...state,
+        errorMessage: action.error.message,
+        isLoading: false,
       };
+    //addTodo (Pessimistic UI) section
     case actions.startRequest:
       return {
         ...state,
+        isSaving: true,
       };
     case actions.addTodo:
+      const savedTodo = {
+        id: records[0].id,
+        ...records[0].fields,
+      };
+
+      if (!records[0].fields.isCompleted) {
+        savedTodo.isCompleted = false;
+      }
       return {
         ...state,
+        todoList: [...state.todoList, savedTodo],
+        isSaving: false,
       };
     case actions.endRequest:
       return {
         ...state,
+        isLoading: false,
+        isSaving: false,
       };
+    //updateTodo, completeTodo (Optimistic UI) section
     case actions.updateTodo:
       return {
         ...state,
@@ -60,6 +93,7 @@ function reducer(state = initialState, action) {
     case actions.clearError:
       return {
         ...state,
+        errorMessage: '',
       };
     default:
       return state;
@@ -73,4 +107,4 @@ const initialState = {
   errorMessage: '',
 };
 
-export { initialState, actions };
+export { reducer, actions, initialState };

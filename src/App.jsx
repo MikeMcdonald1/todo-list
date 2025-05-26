@@ -1,8 +1,13 @@
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useReducer } from 'react';
 import styles from './App.module.css';
+import {
+  reducer as todosReducer,
+  actions as todoActions,
+  initialState as initialTodosState,
+} from './reducers/todos.reducer';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -24,6 +29,8 @@ function App() {
     }
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
   }, [sortField, sortDirection, queryString]);
+
+  const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
 
   // 1. addTodo FUNCTION
   const addTodo = async (newTodo) => {
@@ -56,14 +63,7 @@ function App() {
       }
 
       const { records } = await resp.json();
-      const savedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
-      };
-
-      if (!records[0].fields.isCompleted) {
-        savedTodo.isCompleted = false;
-      }
+      //code removed here for actions.addTodo
 
       setTodoList([...todoList, savedTodo]);
     } catch (error) {
@@ -94,19 +94,7 @@ function App() {
         }
 
         const response = await resp.json();
-        const todos = response.records.map((record) => {
-          const todo = {
-            id: record.id,
-            title: record.fields.title,
-            ...record.fields,
-          };
-
-          if (!todo.isCompleted) {
-            todo.isCompleted = false;
-          }
-          return todo;
-        });
-        console.log(todos);
+        //code removed here for actions.loadTodos
         setTodoList([...todos]);
       } catch (error) {
         setErrorMessage(error.message);
@@ -161,22 +149,22 @@ function App() {
       }
 
       const { records } = await resp.json();
-      const updatedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
-      };
+      // const updatedTodo = {
+      //   id: records[0].id,
+      //   ...records[0].fields,
+      // };
 
-      if (!updatedTodo.isCompleted) {
-        updatedTodo.isCompleted = false;
-      }
+      // if (!updatedTodo.isCompleted) {
+      //   updatedTodo.isCompleted = false;
+      // }
 
-      const finalTodos = todoList.map((todo) => {
-        if (todo.id === updatedTodo.id) {
-          return { ...updatedTodo };
-        } else {
-          return todo;
-        }
-      });
+      // const finalTodos = todoList.map((todo) => {
+      //   if (todo.id === updatedTodo.id) {
+      //     return { ...updatedTodo };
+      //   } else {
+      //     return todo;
+      //   }
+      // });
 
       setTodoList(finalTodos);
     } catch (error) {
@@ -229,30 +217,30 @@ function App() {
 
       const { records } = await resp.json();
 
-      const updatedTodo = {
-        id: records[0]['id'],
-        ...records[0].fields,
-      };
+      // const updatedTodo = {
+      //   id: records[0]['id'],
+      //   ...records[0].fields,
+      // };
 
-      if (!records[0].fields.isCompleted) {
-        updatedTodo.isCompleted = false;
-      }
+      // if (!records[0].fields.isCompleted) {
+      //   updatedTodo.isCompleted = false;
+      // }
 
-      const updatedTodos = todoList.map((todo) => {
-        if (todo.id === updatedTodo.id) {
-          return { ...updatedTodo };
-        } else {
-          return todo;
-        }
-      });
+      // const updatedTodos = todoList.map((todo) => {
+      //   if (todo.id === updatedTodo.id) {
+      //     return { ...updatedTodo };
+      //   } else {
+      //     return todo;
+      //   }
+      // });
       console.log(updatedTodos);
       setTodoList([...updatedTodos]);
     } catch (error) {
       console.log(error);
       setErrorMessage(`${error.message}. Reverting todo...`);
-      const revertedTodos = todoList.map((todo) =>
-        todo.id === originalTodo.id ? { ...originalTodo } : todo
-      );
+      // const revertedTodos = todoList.map((todo) =>
+      //   todo.id === originalTodo.id ? { ...originalTodo } : todo
+      // );
       setTodoList([...revertedTodos]);
     } finally {
       setIsSaving(false);
