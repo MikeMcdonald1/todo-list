@@ -112,14 +112,15 @@ function App() {
 
   // 4. completeTodo FUNCTION
   async function completeTodo(id) {
-    const updatedTodos = todoList.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, isCompleted: true };
-      } else {
-        return todo;
-      }
-    });
-    setTodoList(updatedTodos);
+    // const updatedTodos = todoList.map((todo) => {
+    //   if (todo.id === id) {
+    //     return { ...todo, isCompleted: true };
+    //   } else {
+    //     return todo;
+    //   }
+    // });
+    // setTodoList(updatedTodos);
+    dispatch({ type: todoActions.completeTodo, id });
     const options = {
       method: 'PATCH',
       headers: {
@@ -147,17 +148,7 @@ function App() {
 
       const { records } = await resp.json();
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message);
-      //CODE CUT/PASTED FOR actions.revertTodo
-      // const revertedTodos = todoList.map((todo) => {
-      //   if (todo.id === id) {
-      //     return { ...todo, isCompleted: false };
-      //   } else {
-      //     return todo;
-      //   }
-      // });
-      // setTodoList(revertedTodos);
+      dispatch({ type: todoActions.revertTodo, id });
     }
   }
 
