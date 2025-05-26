@@ -77,7 +77,7 @@ function App() {
   // 2. fetchTodos FUNCTION (Fetching from Airtable)
   useEffect(() => {
     const fetchTodos = async () => {
-      dispatch({ type: actions.fetchTodos });
+      dispatch({ type: todoActions.fetchTodos });
 
       const options = {
         method: 'GET',
@@ -95,9 +95,9 @@ function App() {
 
         const response = await resp.json();
         //code removed here for actions.loadTodos
-        dispatch({ type: actions.loadTodos, records: response.records });
+        dispatch({ type: todoActions.loadTodos, records: response.records });
       } catch (error) {
-        dispatch({ type: actions.setLoadError, error });
+        dispatch({ type: todoActions.setLoadError, error });
       }
     };
 
