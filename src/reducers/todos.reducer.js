@@ -27,7 +27,9 @@ function reducer(state = initialState, action) {
         ...state,
         isLoading: true,
       };
-    case actions.loadTodos:
+
+    case actions.loadTodos: {
+      //do we need extra brackets here since we are using const inside a case? for scoping?
       const todos = action.records.map((record) => {
         const todo = {
           id: record.id,
@@ -45,19 +47,24 @@ function reducer(state = initialState, action) {
         todoList: todos,
         isLoading: false,
       };
+    }
+
     case actions.setLoadError:
       return {
         ...state,
         errorMessage: action.error.message,
         isLoading: false,
       };
+
     //addTodo (Pessimistic UI) section
     case actions.startRequest:
       return {
         ...state,
         isSaving: true,
       };
-    case actions.addTodo:
+
+    case actions.addTodo: {
+      //do we need extra brackets here since we are using const inside a case? for scoping?
       const savedTodo = {
         id: records[0].id,
         ...records[0].fields,
@@ -66,30 +73,94 @@ function reducer(state = initialState, action) {
       if (!records[0].fields.isCompleted) {
         savedTodo.isCompleted = false;
       }
+
       return {
         ...state,
         todoList: [...state.todoList, savedTodo],
         isSaving: false,
       };
+    }
+
     case actions.endRequest:
       return {
         ...state,
         isLoading: false,
         isSaving: false,
       };
+
     //updateTodo, completeTodo (Optimistic UI) section
-    case actions.updateTodo:
+    case actions.updateTodo: {
+      //do we need extra brackets here since we are using const inside a case?
+      const updatedTodo = {
+        id: action.records[0].id, //changed from action.records[0]["id"]
+        ...action.records[0].fields,
+      };
+
+      if (!action.records[0].fields.isCompleted) {
+        //do we need action here?
+        updatedTodo.isCompleted = false;
+      }
+
+      const updatedTodos = state.todoList.map((todo) => {
+        //state.todoList.map????
+        if (todo.id === updatedTodo.id) {
+          return { ...updatedTodo };
+        } else {
+          return todo;
+        }
+      });
       return {
         ...state,
+        todoList: updatedTodos, //do we need brackets and the spread here?? changed from [...updatedTodos]
       };
-    case actions.completeTodo:
+    }
+
+    case actions.completeTodo: {
+      //do we need extra brackets here since we are using const inside a case?
+      const completedTodo = {
+        //changed to completeTodo from updatedTodo which was already declared in actions.updateTodo
+        id: action.records[0].id,
+        ...action.records[0].fields,
+      };
+
+      if (!action.updatedTodo.isCompleted) {
+        //do we need action here?
+        completedTodo.isCompleted = false; //changed from updateTodo to completedTodo
+      }
+
+      const finalTodos = state.todoList.map((todo) => {
+        //state.todoList.map????
+        if (todo.id === completedTodo.id) {
+          //changed from updatedTodo to completedTodo
+          return { ...completedTodo }; //changed from updatedTodo to completedTodo
+        } else {
+          return todo;
+        }
+      });
+
       return {
         ...state,
+        todoList: finalTodos, //do we need brackets or parentheses around `finalTodos`?
       };
-    case actions.revertTodo:
+    }
+
+    case actions.revertTodo: {
+      const revertedTodos = todoList.map((todo) => {
+        //state.todoList.map??
+        if (todo.id === id) {
+          //action.id??
+          return { ...todo, isCompleted: false };
+        } else {
+          return todo;
+        }
+      });
+
       return {
         ...state,
+        todoList: revertedTodos, //do we need brackets or parentheses around `revertTodos`?
       };
+    }
+
     case actions.clearError:
       return {
         ...state,

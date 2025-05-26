@@ -149,6 +149,7 @@ function App() {
       }
 
       const { records } = await resp.json();
+      // CODE CUT/PASTED FOR actions.updatedTodo
       // const updatedTodo = {
       //   id: records[0].id,
       //   ...records[0].fields,
@@ -166,19 +167,19 @@ function App() {
       //   }
       // });
 
-      setTodoList(finalTodos);
+      // setTodoList(finalTodos);
     } catch (error) {
       console.log(error);
       setErrorMessage(error.message);
-
-      const revertedTodos = todoList.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, isCompleted: false };
-        } else {
-          return todo;
-        }
-      });
-      setTodoList(revertedTodos);
+      //CODE CUT/PASTED FOR actions.revertTodo
+      // const revertedTodos = todoList.map((todo) => {
+      //   if (todo.id === id) {
+      //     return { ...todo, isCompleted: false };
+      //   } else {
+      //     return todo;
+      //   }
+      // });
+      // setTodoList(revertedTodos);
     }
   }
 
@@ -216,7 +217,7 @@ function App() {
       }
 
       const { records } = await resp.json();
-
+      // code cut/paste here for actions.updateTodo
       // const updatedTodo = {
       //   id: records[0]['id'],
       //   ...records[0].fields,
@@ -233,8 +234,8 @@ function App() {
       //     return todo;
       //   }
       // });
-      console.log(updatedTodos);
-      setTodoList([...updatedTodos]);
+
+      // setTodoList([...updatedTodos]);
     } catch (error) {
       console.log(error);
       setErrorMessage(`${error.message}. Reverting todo...`);
