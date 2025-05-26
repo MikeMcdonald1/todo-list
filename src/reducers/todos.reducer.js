@@ -89,11 +89,11 @@ function reducer(state = initialState, action) {
     //updateTodo, completeTodo (Optimistic UI) section
     case actions.updateTodo: {
       const updatedTodo = {
-        id: action.records[0].id,
-        ...action.records[0].fields,
+        id: action.editedTodo.id,
+        ...action.editedTodo,
       };
 
-      if (!action.records[0].fields.isCompleted) {
+      if (updatedTodo.isCompleted === undefined) {
         updatedTodo.isCompleted = false;
       }
 

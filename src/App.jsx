@@ -13,10 +13,10 @@ const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${impor
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
+  // const [todoList, setTodoList] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState('');
+  // const [isSaving, setIsSaving] = useState(false);
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
   const [queryString, setQueryString] = useState('');
@@ -108,14 +108,6 @@ function App() {
 
   // 4. completeTodo FUNCTION
   async function completeTodo(id) {
-    // const updatedTodos = todoList.map((todo) => {
-    //   if (todo.id === id) {
-    //     return { ...todo, isCompleted: true };
-    //   } else {
-    //     return todo;
-    //   }
-    // });
-    // setTodoList(updatedTodos);
     dispatch({ type: todoActions.completeTodo, id });
     const options = {
       method: 'PATCH',
@@ -151,7 +143,9 @@ function App() {
   // 5. updateTodo FUNCTION
 
   async function updateTodo(editedTodo) {
-    const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+    const originalTodo = todoState.todoList.find(
+      (todo) => todo.id === editedTodo.id
+    );
 
     const payload = {
       records: [
@@ -186,7 +180,7 @@ function App() {
     } catch (error) {
       dispatch({ type: todoActions.revertTodo, originalTodo });
     } finally {
-      setIsSaving(false);
+      dispatch({ type: todoActions.endRequest });
     }
   }
 
@@ -210,7 +204,7 @@ function App() {
         queryString={queryString}
         setQueryString={setQueryString}
       />
-      {errorMessage && (
+      {todoState.errorMessage && (
         <div>
           <hr />
           <p className={styles.error}>{todoState.errorMessage}</p>
