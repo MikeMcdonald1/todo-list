@@ -61,10 +61,7 @@ function App() {
       if (!resp.ok) {
         throw new Error('Failed to add todo');
       }
-
       const { records } = await resp.json();
-      //code removed here for actions.addTodo
-
       dispatch({ type: todoActions.addTodo, records });
     } catch (error) {
       dispatch({ type: todoActions.setLoadError, error });
@@ -93,7 +90,6 @@ function App() {
         }
 
         const response = await resp.json();
-        //code removed here for actions.loadTodos
         dispatch({ type: todoActions.loadTodos, records: response.records });
       } catch (error) {
         dispatch({ type: todoActions.setLoadError, error });
@@ -198,12 +194,12 @@ function App() {
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>To Do List</h1>
-      <TodoForm onAddTodo={handleAddTodo} />
+      <TodoForm onAddTodo={handleAddTodo} isSaving={todoState.isSaving} />
       <TodoList
-        todoList={todoList}
+        todoList={todoState.todoList}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
-        isLoading={isLoading}
+        isLoading={todoState.isLoading}
       />
       <hr />
       <TodosViewForm
@@ -217,8 +213,10 @@ function App() {
       {errorMessage && (
         <div>
           <hr />
-          <p className={styles.error}>{errorMessage}</p>
-          <button onClick={() => setErrorMessage('')}>Dismiss</button>
+          <p className={styles.error}>{todoState.errorMessage}</p>
+          <button onClick={() => dispatch({ type: todoActions.clearError })}>
+            Dismiss
+          </button>
         </div>
       )}
     </div>

@@ -64,11 +64,11 @@ function reducer(state = initialState, action) {
 
     case actions.addTodo: {
       const savedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
+        id: action.records[0].id,
+        ...action.records[0].fields,
       };
 
-      if (!records[0].fields.isCompleted) {
+      if (!action.records[0].fields.isCompleted) {
         savedTodo.isCompleted = false;
       }
 
@@ -89,17 +89,15 @@ function reducer(state = initialState, action) {
     //updateTodo, completeTodo (Optimistic UI) section
     case actions.updateTodo: {
       const updatedTodo = {
-        id: action.records[0].id, //changed from action.records[0]["id"]
+        id: action.records[0].id,
         ...action.records[0].fields,
       };
 
       if (!action.records[0].fields.isCompleted) {
-        //do we need action here?
         updatedTodo.isCompleted = false;
       }
 
       const updatedTodos = state.todoList.map((todo) => {
-        //state.todoList.map????
         if (todo.id === updatedTodo.id) {
           return { ...updatedTodo };
         } else {
@@ -108,43 +106,27 @@ function reducer(state = initialState, action) {
       });
       return {
         ...state,
-        todoList: updatedTodos, //do we need brackets and the spread here?? changed from [...updatedTodos]
+        todoList: updatedTodos,
       };
     }
 
     case actions.completeTodo: {
-      const completedTodo = {
-        //changed to completeTodo from updatedTodo which was already declared in actions.updateTodo
-        id: action.records[0].id,
-        ...action.records[0].fields,
-      };
-
-      if (!action.updatedTodo.isCompleted) {
-        //do we need action here?
-        completedTodo.isCompleted = false; //changed from updateTodo to completedTodo
-      }
-
-      const finalTodos = state.todoList.map((todo) => {
-        //state.todoList.map????
-        if (todo.id === completedTodo.id) {
-          //changed from updatedTodo to completedTodo
-          return { ...completedTodo }; //changed from updatedTodo to completedTodo
-        } else {
-          return todo;
+      const updatedTodos = state.todoList.map((todo) => {
+        if (todo.id === action.id) {
+          return { ...todo, isCompleted: true };
         }
+        return todo;
       });
 
       return {
         ...state,
-        todoList: finalTodos, //do we need brackets or parentheses around `finalTodos`?
+        todoList: updatedTodos,
       };
     }
 
     case actions.revertTodo: {
-      const revertedTodos = todoList.map((todo) => {
-        //state.todoList.map??
-        if (todo.id === id) {
-          //action.id??
+      const revertedTodos = state.todoList.map((todo) => {
+        if (todo.id === action.id) {
           return { ...todo, isCompleted: false };
         } else {
           return todo;
@@ -153,7 +135,7 @@ function reducer(state = initialState, action) {
 
       return {
         ...state,
-        todoList: revertedTodos, //do we need brackets or parentheses around `revertTodos`?
+        todoList: revertedTodos,
       };
     }
 
