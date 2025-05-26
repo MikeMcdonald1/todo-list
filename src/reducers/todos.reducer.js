@@ -29,7 +29,6 @@ function reducer(state = initialState, action) {
       };
 
     case actions.loadTodos: {
-      //do we need extra brackets here since we are using const inside a case? for scoping?
       const todos = action.records.map((record) => {
         const todo = {
           id: record.id,
@@ -64,7 +63,6 @@ function reducer(state = initialState, action) {
       };
 
     case actions.addTodo: {
-      //do we need extra brackets here since we are using const inside a case? for scoping?
       const savedTodo = {
         id: records[0].id,
         ...records[0].fields,
@@ -90,7 +88,6 @@ function reducer(state = initialState, action) {
 
     //updateTodo, completeTodo (Optimistic UI) section
     case actions.updateTodo: {
-      //do we need extra brackets here since we are using const inside a case?
       const updatedTodo = {
         id: action.records[0].id, //changed from action.records[0]["id"]
         ...action.records[0].fields,
@@ -116,7 +113,6 @@ function reducer(state = initialState, action) {
     }
 
     case actions.completeTodo: {
-      //do we need extra brackets here since we are using const inside a case?
       const completedTodo = {
         //changed to completeTodo from updatedTodo which was already declared in actions.updateTodo
         id: action.records[0].id,
