@@ -1,6 +1,7 @@
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
-import TodosViewForm from './features/TodosViewForm';
+import TodosViewForm from './features/TodoForm';
+import TodosPage from './pages/TodosPage';
 import { useState, useEffect, useCallback, useReducer } from 'react';
 import styles from './App.module.css';
 import {
@@ -188,31 +189,23 @@ function App() {
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>To Do List</h1>
-      <TodoForm onAddTodo={handleAddTodo} isSaving={todoState.isSaving} />
-      <TodoList
-        todoList={todoState.todoList}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-        isLoading={todoState.isLoading}
-      />
-      <hr />
-      <TodosViewForm
+      <TodosPage
+        todoState={todoState}
+        handleAddTodo={handleAddTodo}
+        completeTodo={completeTodo}
+        updateTodo={updateTodo}
         sortDirection={sortDirection}
         setSortDirection={setSortDirection}
         sortField={sortField}
         setSortField={setSortField}
         queryString={queryString}
         setQueryString={setQueryString}
+        todoList={todoState.todoList}
+        isLoading={todoState.isLoading}
+        isSaving={todoState.isSaving}
+        errorMessage={todoState.errorMessage}
+        clearError={() => dispatch({ type: todoActions.clearError })}
       />
-      {todoState.errorMessage && (
-        <div>
-          <hr />
-          <p className={styles.error}>{todoState.errorMessage}</p>
-          <button onClick={() => dispatch({ type: todoActions.clearError })}>
-            Dismiss
-          </button>
-        </div>
-      )}
     </div>
   );
 }
