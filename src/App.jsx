@@ -1,7 +1,8 @@
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
-import TodosViewForm from './features/TodoForm';
+import TodosViewForm from './features/TodosViewForm';
 import TodosPage from './pages/TodosPage';
+import Header from './shared/Header';
 import { useState, useEffect, useCallback, useReducer } from 'react';
 import styles from './App.module.css';
 import {
@@ -188,7 +189,8 @@ function App() {
   // return statement for our main App.jsx component
   return (
     <div className={styles.container}>
-      <h1 className={styles.header}>To Do List</h1>
+      {/* <h1 className={styles.header}>To Do List</h1> */}
+      <Header />
       <TodosPage
         todoState={todoState}
         handleAddTodo={handleAddTodo}
