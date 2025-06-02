@@ -43,10 +43,10 @@ function App() {
   }, [sortField, sortDirection, queryString]);
 
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
-  const filteredToDoList = todoState.todoList.filter((todo) =>
+  const filteredTodoList = todoState.todoList.filter((todo) =>
     todo.title.toLowerCase().includes(queryString.toLowerCase())
   );
-  const totalPages = Math.ceil(filteredToDoList.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredTodoList.length / itemsPerPage);
 
   // 1. addTodo FUNCTION
   const addTodo = async (newTodo) => {
