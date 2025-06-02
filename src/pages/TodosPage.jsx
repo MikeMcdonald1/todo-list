@@ -23,8 +23,10 @@ function TodosPage({
   setSearchParams,
   handlePreviousPage,
   handleNextPage,
+  paginatedTodoList,
 }) {
   const { todoList, isLoading, isSaving, errorMessage } = todoState;
+  console.log('Full todoList:', todoList);
   return (
     <div>
       <TodoForm onAddTodo={handleAddTodo} isSaving={isSaving} />
@@ -39,6 +41,7 @@ function TodosPage({
         setSearchParams={setSearchParams}
         handlePreviousPage={handlePreviousPage}
         handleNextPage={handleNextPage}
+        paginatedTodoList={paginatedTodoList}
       />
 
       <TodosViewForm

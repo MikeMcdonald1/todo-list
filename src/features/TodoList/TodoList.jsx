@@ -12,21 +12,22 @@ function TodoList({
   setSearchParams,
   handlePreviousPage,
   handleNextPage,
+  paginatedTodoList,
 }) {
-  const filteredTodoList = todoList.filter(
-    (todo) => todo.isCompleted === false
-  );
+  // const filteredTodoList = todoList.filter(
+  //   (todo) => todo.isCompleted === false
+  // );
 
   if (isLoading) {
     return <p>Todo list loading...</p>;
   }
 
-  return filteredTodoList.length === 0 ? (
+  return paginatedTodoList.length === 0 ? (
     <p>Add todo above to get started</p>
   ) : (
     <div>
       <ul className={styles.unorderedList}>
-        {filteredTodoList.map((todo) => (
+        {paginatedTodoList.map((todo) => (
           <TodoListItem
             key={todo.id}
             todo={todo}

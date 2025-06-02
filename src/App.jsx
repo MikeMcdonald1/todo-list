@@ -12,17 +12,13 @@ import {
   actions as todoActions,
   initialState as initialTodosState,
 } from './reducers/todos.reducer';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
 function App() {
-  // const [todoList, setTodoList] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [errorMessage, setErrorMessage] = useState('');
-  // const [isSaving, setIsSaving] = useState(false);
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
   const [queryString, setQueryString] = useState('');
@@ -32,6 +28,7 @@ function App() {
   const itemsPerPage = 15;
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const indexOfFirstTodo = (currentPage - 1) * itemsPerPage;
+  const navigate = useNavigate();
 
   const encodeUrl = useCallback(() => {
     let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
@@ -43,8 +40,17 @@ function App() {
   }, [sortField, sortDirection, queryString]);
 
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
-  const filteredTodoList = todoState.todoList.filter((todo) =>
-    todo.title.toLowerCase().includes(queryString.toLowerCase())
+  const filteredTodoList = todoState.todoList.filter(
+    (todo) =>
+      todo.title.toLowerCase().includes(queryString.toLowerCase()) &&
+      !todo.isCompleted
+  );
+
+  console.log('filteredTodoList:', filteredTodoList);
+
+  const paginatedTodoList = filteredTodoList.slice(
+    indexOfFirstTodo,
+    indexOfFirstTodo + itemsPerPage
   );
   const totalPages = Math.ceil(filteredTodoList.length / itemsPerPage);
 
@@ -222,6 +228,14 @@ function App() {
     }
   }, [location]);
 
+  useEffect(() => {
+    if (totalPages > 0) {
+      if (isNaN(currentPage) || currentPage < 1 || currentPage > totalPages) {
+        navigate('/');
+      }
+    }
+  }, [currentPage, totalPages, navigate]);
+
   // return statement for our main App.jsx component
   return (
     <div>
@@ -242,7 +256,7 @@ function App() {
                 setSortField={setSortField}
                 queryString={queryString}
                 setQueryString={setQueryString}
-                todoList={todoState.todoList}
+                // todoList={todoState.todoList}
                 isLoading={todoState.isLoading}
                 isSaving={todoState.isSaving}
                 errorMessage={todoState.errorMessage}
@@ -252,6 +266,7 @@ function App() {
                 setSearchParams={setSearchParams}
                 handlePreviousPage={handlePreviousPage}
                 handleNextPage={handleNextPage}
+                paginatedTodoList={paginatedTodoList}
               />
             }
           />

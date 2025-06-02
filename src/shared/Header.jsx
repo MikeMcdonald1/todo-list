@@ -5,7 +5,7 @@ import styles from '../shared/Header.module.css';
 function Header({ title }) {
   return (
     <div>
-      <header>
+      <header className={styles.header}>
         <h1 className={styles.title}>{title}</h1>
         <div>
           <nav className={styles.nav}>
