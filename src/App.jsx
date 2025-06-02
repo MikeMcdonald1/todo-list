@@ -10,7 +10,8 @@ import {
   actions as todoActions,
   initialState as initialTodosState,
 } from './reducers/todos.reducer';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -204,24 +205,32 @@ function App() {
     <div>
       <Header title={title} />
       <div className={styles.container}>
-        {/* <h1 className={styles.header}>To Do List</h1> */}
-        <TodosPage
-          todoState={todoState}
-          handleAddTodo={handleAddTodo}
-          completeTodo={completeTodo}
-          updateTodo={updateTodo}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-          sortField={sortField}
-          setSortField={setSortField}
-          queryString={queryString}
-          setQueryString={setQueryString}
-          todoList={todoState.todoList}
-          isLoading={todoState.isLoading}
-          isSaving={todoState.isSaving}
-          errorMessage={todoState.errorMessage}
-          clearError={() => dispatch({ type: todoActions.clearError })}
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <TodosPage
+                todoState={todoState}
+                handleAddTodo={handleAddTodo}
+                completeTodo={completeTodo}
+                updateTodo={updateTodo}
+                sortDirection={sortDirection}
+                setSortDirection={setSortDirection}
+                sortField={sortField}
+                setSortField={setSortField}
+                queryString={queryString}
+                setQueryString={setQueryString}
+                todoList={todoState.todoList}
+                isLoading={todoState.isLoading}
+                isSaving={todoState.isSaving}
+                errorMessage={todoState.errorMessage}
+                clearError={() => dispatch({ type: todoActions.clearError })}
+              />
+            }
+          />
+          <Route path="/about" element={<h1>About</h1>} />
+          <Route path="/\" element={<h1>Not Found</h1>} />
+        </Routes>
       </div>
     </div>
   );
