@@ -188,26 +188,28 @@ function App() {
 
   // return statement for our main App.jsx component
   return (
-    <div className={styles.container}>
-      {/* <h1 className={styles.header}>To Do List</h1> */}
-      <Header />
-      <TodosPage
-        todoState={todoState}
-        handleAddTodo={handleAddTodo}
-        completeTodo={completeTodo}
-        updateTodo={updateTodo}
-        sortDirection={sortDirection}
-        setSortDirection={setSortDirection}
-        sortField={sortField}
-        setSortField={setSortField}
-        queryString={queryString}
-        setQueryString={setQueryString}
-        todoList={todoState.todoList}
-        isLoading={todoState.isLoading}
-        isSaving={todoState.isSaving}
-        errorMessage={todoState.errorMessage}
-        clearError={() => dispatch({ type: todoActions.clearError })}
-      />
+    <div>
+      <Header title="To Do List" />
+      <div className={styles.container}>
+        {/* <h1 className={styles.header}>To Do List</h1> */}
+        <TodosPage
+          todoState={todoState}
+          handleAddTodo={handleAddTodo}
+          completeTodo={completeTodo}
+          updateTodo={updateTodo}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
+          sortField={sortField}
+          setSortField={setSortField}
+          queryString={queryString}
+          setQueryString={setQueryString}
+          todoList={todoState.todoList}
+          isLoading={todoState.isLoading}
+          isSaving={todoState.isSaving}
+          errorMessage={todoState.errorMessage}
+          clearError={() => dispatch({ type: todoActions.clearError })}
+        />
+      </div>
     </div>
   );
 }
