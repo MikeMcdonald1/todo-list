@@ -48,6 +48,18 @@ function App() {
   );
   const totalPages = Math.ceil(filteredTodoList.length / itemsPerPage);
 
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setSearchParams({ page: currentPage - 1 });
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setSearchParams({ page: currentPage + 1 });
+    }
+  };
+
   // 1. addTodo FUNCTION
   const addTodo = async (newTodo) => {
     const payload = {
@@ -235,6 +247,11 @@ function App() {
                 isSaving={todoState.isSaving}
                 errorMessage={todoState.errorMessage}
                 clearError={() => dispatch({ type: todoActions.clearError })}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setSearchParams={setSearchParams}
+                handlePreviousPage={handlePreviousPage}
+                handleNextPage={handleNextPage}
               />
             }
           />

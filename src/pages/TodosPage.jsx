@@ -1,7 +1,10 @@
 import React from 'react';
+import App from '../App';
 import TodoForm from '../features/TodoForm';
 import TodoList from '../features/TodoList/TodoList';
 import TodosViewForm from '../features/TodosViewForm';
+import { useSearchParams } from 'react-router';
+import styles from '../pages/TodosPage';
 
 function TodosPage({
   todoState,
@@ -15,6 +18,11 @@ function TodosPage({
   queryString,
   setQueryString,
   clearError,
+  currentPage,
+  totalPages,
+  setSearchParams,
+  handlePreviousPage,
+  handleNextPage,
 }) {
   const { todoList, isLoading, isSaving, errorMessage } = todoState;
   return (
@@ -26,6 +34,11 @@ function TodosPage({
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setSearchParams={setSearchParams}
+        handlePreviousPage={handlePreviousPage}
+        handleNextPage={handleNextPage}
       />
 
       <TodosViewForm
