@@ -37,11 +37,15 @@ function TodoList({
       </ul>
 
       <div className={styles.paginationControls}>
-        <button onClick={handlePreviousPage}>Previous</button>
+        <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+          Previous
+        </button>
         <span className={styles.paginationPageNumber}>
           Page {currentPage} of {totalPages}{' '}
         </span>
-        <button onClick={handleNextPage}>Next</button>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );
