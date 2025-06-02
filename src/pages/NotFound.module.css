@@ -1,0 +1,13 @@
+.notFoundPage {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.notFoundParagraph {
+  margin: 1rem;
+}
+
+.notFoundLink {
+  margin: 1rem;
+}
