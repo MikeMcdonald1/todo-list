@@ -12,7 +12,7 @@ import {
   actions as todoActions,
   initialState as initialTodosState,
 } from './reducers/todos.reducer';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -27,7 +27,11 @@ function App() {
   const [sortDirection, setSortDirection] = useState('desc');
   const [queryString, setQueryString] = useState('');
   const [title, setTitle] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const itemsPerPage = 15;
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const indexOfFirstTodo = (currentPage - 1) * itemsPerPage;
 
   const encodeUrl = useCallback(() => {
     let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
@@ -39,6 +43,10 @@ function App() {
   }, [sortField, sortDirection, queryString]);
 
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
+  const filteredToDoList = todoState.todoList.filter((todo) =>
+    todo.title.toLowerCase().includes(queryString.toLowerCase())
+  );
+  const totalPages = Math.ceil(filteredToDoList.length / itemsPerPage);
 
   // 1. addTodo FUNCTION
   const addTodo = async (newTodo) => {
