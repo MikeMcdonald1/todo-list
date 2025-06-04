@@ -1,5 +1,12 @@
 import { useReducer } from 'react';
 
+const initialState = {
+  todoList: [],
+  isLoading: false,
+  isSaving: false,
+  errorMessage: '',
+};
+
 const actions = {
   //actions in useEffect that loads todos
   fetchTodos: 'fetchTodos',
@@ -32,13 +39,11 @@ function reducer(state = initialState, action) {
       const todos = action.records.map((record) => {
         const todo = {
           id: record.id,
-          title: record.fields.title,
           ...record.fields,
+          title: record.fields.title || '',
+          isCompleted: !!record.fields.isCompleted,
         };
 
-        if (!todo.isCompleted) {
-          todo.isCompleted = false;
-        }
         return todo;
       });
       return {
@@ -148,12 +153,5 @@ function reducer(state = initialState, action) {
       return state;
   }
 }
-
-const initialState = {
-  todoList: [],
-  isLoading: false,
-  isSaving: false,
-  errorMessage: '',
-};
 
 export { reducer, actions, initialState };
